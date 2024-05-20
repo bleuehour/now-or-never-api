@@ -1,0 +1,44 @@
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id        Int       @id @default(autoincrement())
+    username  String       @unique
+    email     String       @unique
+    password  String
+    todos     Todo[]
+    createdAt DateTime     @default(now())
+    streak    Int          @default(0)
+    friends   Friendship[] @relation("friends")
+    friendsOf Friendship[] @relation("friendsOf")
+}
+
+model Todo {
+    id         Int      @id @default(autoincrement())
+    text       String
+    createdAt  DateTime @default(now())
+    userId     Int
+    user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    isComplete Boolean  @default(false)
+    isRecurring Boolean @default(false)
+}
+
+model Friendship {
+    id        Int      @id @default(autoincrement())
+    userId    Int
+    friendId  Int
+    user      User     @relation("friends", fields: [userId], references: [id],onDelete: Cascade)
+    friend    User     @relation("friendsOf", fields: [friendId], references: [id],onDelete: Cascade)
+    isPending Boolean  @default(true)
+    createdAt DateTime @default(now())
+
+    @@unique([userId, friendId])
+    @@unique([friendId, userId])
+}
