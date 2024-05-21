@@ -1,4 +1,4 @@
-[ ] Email case sensitive 
-[ ] error handling? 
-[ ] complete testing
-[ ] cron error?
+- [ ] Email case sensitive 
+- [ ] error handling? 
+- [ ] complete testing
+- [ ] cron error?
